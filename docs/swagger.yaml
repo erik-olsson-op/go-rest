@@ -1,0 +1,227 @@
+definitions:
+  models.Credentials:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 25
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.ErrMessage:
+    properties:
+      message: {}
+    type: object
+  models.Event:
+    properties:
+      dateTime:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      title:
+        type: string
+      userId:
+        type: integer
+    required:
+    - dateTime
+    - description
+    - location
+    - title
+    type: object
+  models.HealthCheck:
+    properties:
+      status:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /api/ping:
+    get:
+      consumes:
+      - application/json
+      description: do healthcheck
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.HealthCheck'
+      summary: Healthcheck request
+  /api/v1/events:
+    get:
+      consumes:
+      - application/json
+      description: Get all events
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Event'
+            type: array
+        "500":
+          description: failed to fetch all events
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      summary: Get all events
+    post:
+      consumes:
+      - application/json
+      description: Create new event
+      parameters:
+      - description: Event
+        in: body
+        name: models.Event
+        required: true
+        schema:
+          $ref: '#/definitions/models.Event'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: failed request
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      security:
+      - JWT: []
+      summary: Create new event
+  /api/v1/events/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete event by id
+      parameters:
+      - description: Event id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found - {id}
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      security:
+      - JWT: []
+      summary: Delete event by id
+    get:
+      consumes:
+      - application/json
+      description: Get event by id
+      parameters:
+      - description: Event id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "404":
+          description: not found - {id}
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      summary: Get event by id
+    put:
+      consumes:
+      - application/json
+      description: Update event by id
+      parameters:
+      - description: Event id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: not found - {id}
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      security:
+      - JWT: []
+      summary: Update event by id
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Signup new user
+      parameters:
+      - description: Credentials
+        in: body
+        name: models.Credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.Credentials'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: failed request
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      summary: Signup new user
+  /api/v1/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user (Get JWT Token)
+      parameters:
+      - description: Email and Password
+        in: body
+        name: models.Credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: failed request
+          schema:
+            $ref: '#/definitions/models.ErrMessage'
+      summary: Login user (Get JWT Token)
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

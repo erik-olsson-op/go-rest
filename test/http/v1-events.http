@@ -1,0 +1,49 @@
+### GET fetch all events
+GET {{host}}/api/v1/events
+Content-Type: application/json
+
+###
+
+### GET fetch event by id
+< {%
+    request.variables.set("id", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+%}
+GET {{host}}/api/v1/events/{{id}}
+Content-Type: application/json
+
+###
+
+### DELETE delete event by id
+DELETE {{host}}/api/v1/events/1
+Content-Type: application/json
+Authorization: {{token}}
+
+###
+
+### POST add a new event
+POST {{host}}/api/v1/events
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "title": "New Event",
+  "dateTime": "2024-10-18T17:25:36Z",
+  "description": "This is a New event description.",
+  "location": "New Location"
+}
+
+###
+
+### PUT update a event
+PUT {{host}}/api/v1/events/11
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "title": "Updated Event",
+  "dateTime": "2024-10-18T17:25:36Z",
+  "description": "This is a Updated event description.",
+  "location": "Updated Location"
+}
+
+###
